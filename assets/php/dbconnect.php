@@ -1,7 +1,7 @@
 <?php
 	define('DBHOST', 'localhost');
-	define('DBUSER', 'root');
-	define('DBPASS', 'root');
+	define('DBUSER', '');
+	define('DBPASS', '');
 	define('DBNAME', 'car_rental_app');
 	define('DBPORT', 3306);
 
