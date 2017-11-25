@@ -1,7 +1,7 @@
 <?php
 	define('DBHOST', 'localhost');
-	define('DBUSER', '');
-	define('DBPASS', '');
+	define('DBUSER', 'root');
+	define('DBPASS', 'root');
 	define('DBNAME', 'car_rental_app');
 	define('DBPORT', 3306);
 
@@ -9,7 +9,5 @@
 	if(mysqli_connect_errno()){
 		echo 'Connection Failed->'.mysqli_connect_error();
 		exit;
-	}else{
-		echo 'Connection established';
 	}
 ?>

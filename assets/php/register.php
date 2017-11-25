@@ -22,7 +22,7 @@
 		$password = htmlspecialchars($password);
 
 		$password_hash = hash('sha512', $password);
-		$_id = uniqid($username,true);
+		$_id = uniqid();
 
 		$sql = "INSERT INTO users(_id,f_name,l_name,username,password,admin) 
 				VALUES('$_id', '$fname', '$lname', '$username', '$password_hash', false)";
@@ -32,7 +32,8 @@
 		if(!$res){
 			echo "Error in mysqli query";
 		}else{
-			echo "success";
+			$_SESSION["fname"] = $fname;
+			header("Location: ../../index.php");
 		}
 
 	}
