@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>EZRide</title>
     <link rel="stylesheet" type="text/css" href="../css/login.css">
+    <link rel="shortcut icon" href="../../public/images/shortcut_icon.png">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../js/register-validation.js"></script>
+    <script type="text/javascript" src="../js/register.js"></script>
 </head>
 <body>
     <div class="container">
@@ -30,6 +31,7 @@
                         <div class="col-sm-12">
                         <input type="text" name="username" id="username" class="form-control" placeholder="Set Username" required>
                         <span id="username-span" class="glyphicon form-control-feedback"></span>
+                        <span id="username-available" class="control-label"></span>
                         </div>
                     </div>
                     <div id="password-div" class="form-group has-feedback">
@@ -56,6 +58,9 @@
                         </div>
                     </div>
             </form><!-- /form -->
+            <a href="login.html">
+                Already a user?
+            </a>
         </div><!-- /card-container -->
     </div><!-- /container -->
 </body>

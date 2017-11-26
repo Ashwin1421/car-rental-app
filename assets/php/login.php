@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	if(isset($_POST["log-in"])){
+	if(isset($_POST["login"])){
 
 		$username = trim($_POST['username']);
 		$username = strip_tags($username);
@@ -24,6 +24,8 @@
 			
 				$_SESSION["username"] =$username;
 				$_SESSION["fname"] = $row["f_name"];
+				$_SESSION["admin"] = $row["admin"];
+
 				header("Location: ../../index.php");
 			}
 		}

@@ -8,6 +8,7 @@ $(document).ready(function(){
 	//check if all fields are set or not
 	//by default none of them are set.
 	var isusernameset = false;
+	var isusernameavailable = false;
 	var ispasswordset = false;
 	var isconfirmpasswordset = false;
 	var isfnameset = false;
@@ -60,6 +61,34 @@ $(document).ready(function(){
 		var username_text = username.val();
 		var username_div = $("#username-div");
 		var username_span = $("#username-span");
+		var username_available_span = $("#username-available");
+
+		$.ajax({
+			url: '../php/useravailability.php',
+			type: 'POST',
+			data: {
+				'username': username.val()
+			},
+			success: function(data){
+				if(data == 'not available'){
+					username_div.addClass("has-error");
+					username_span.addClass("glyphicon-remove");
+					username_available_span.text("Not available");
+					isusernameavailable = false;
+				}
+				if(data == 'available'){
+					username_div.removeClass("has-error");
+					username_div.addClass("has-success");
+					username_span.removeClass("glyphicon-remove");
+					username_span.addClass("glyphicon-ok");
+					username_available_span.text("Available");
+					isusernameavailable = true;
+				}
+			},
+			error: function(data){
+				console.log("error",data);
+			}
+		});
 
 		if(username_text.length<8){
 			username_div.addClass("has-error");
@@ -120,7 +149,7 @@ $(document).ready(function(){
 			isconfirmpasswordset = true;
 		}
 
-		if(password.val() == confirmpassword.val()){
+		if(password.val() === confirmpassword.val()){
 			equalpasswords = true;
 			
 		}
@@ -129,6 +158,7 @@ $(document).ready(function(){
 			isfnameset &&
 			islnameset && 
 			isusernameset && 
+			isusernameavailable &&
 			ispasswordset && 
 			isconfirmpasswordset && 
 			equalpasswords){
