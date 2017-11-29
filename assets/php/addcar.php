@@ -2,13 +2,15 @@
 	session_start();
 	if(isset($_POST["add-car"])){
 		$carname = $_POST["car-name"];
-		$car_id = $_POST["car-id"];
+		$car_id = uniqid();
 		$cartype = $_POST["car-type"];
 		$carcapacity = intval($_POST["car-capacity"]);
-		$carcost = floatval($_POST["car-cost"]);
-		$cardeposit = floatval($_POST["car-deposit"]);
+		$carcost = intval($_POST["car-cost"]);
+		$cardeposit = intval($_POST["car-deposit"]);
 		$carcolor = $_POST["car-color"];
-
+		$image_file_name = basename($_FILES["car-image"]["name"]);
+		//
+		
 		//image uploads
 		$image_uploads_dir = "../../public/images/uploads/";
 		$target_image_file = $image_uploads_dir . basename($_FILES["car-image"]["name"]);
@@ -48,7 +50,18 @@
 		// if everything is ok, try to upload file
 		} else {
 		    if (move_uploaded_file($_FILES["car-image"]["tmp_name"], $target_image_file)) {
-		        echo "The file ". basename( $_FILES["car-image"]["name"]). " has been uploaded.";
+		    	include 'dbconnect.php';
+				$sql = "INSERT INTO `cars`(`_id`, `name`, `cost_per_mile`, `deposit`, `availability`, `type`, `color`, `image`, `capacity`) 
+						VALUES
+					 	('$car_id', '$carname', $carcost, $cardeposit, true,
+				    			 '$cartype','$carcolor','$image_file_name',$carcapacity)";
+				$res = mysqli_query($conn, $sql);
+				if(!$res){
+					echo "Error in query";
+				}else{
+					header('Location: ../views/addcarform.php');
+					echo "<br>The file ". basename( $_FILES["car-image"]["name"]). " has been uploaded.";
+				}
 		    } else {
 		        echo "Sorry, there was an error uploading your file.";
 		    }

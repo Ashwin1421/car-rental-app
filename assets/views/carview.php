@@ -12,30 +12,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/add-form.css">
-    <link rel="stylesheet" type="text/css" href="../css/carousel.css">
-    <script type="text/javascript" src="../js/carousel.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/viewcars.css">
+    <script type="text/javascript" src="../js/viewcars.js"></script>
 </head>
 
 <body>
 <?php
     session_start();
 ?>
-<!-- Background carousel -->
-<div class="carousel slide carousel-fade" data-ride="carousel">
-
-    <!-- Wrapper for slides -->
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-        </div>
-        <div class="item">
-        </div>
-        <div class="item">
-        </div>
-    </div>
-</div>
-<!-- Background carousel -->
-
 
 <div class="content">
     <!-- Navigation -->
@@ -153,72 +137,23 @@
     </nav>
 
     <!-- Page Content -->
-    <div class="container">
-        <form id="car-add-form" class="form-horizontal" action="../php/addcar.php" method="POST" 
-        enctype="multipart/form-data">
-            <h4>Add a new car</h4>
-            <hr>
-            <div class="form-group">
-                <label for="car-name" class="control-label col-sm-2">Car Name:</label>
-                <div class="col-sm-4">
-                    <input type="text" name="car-name" id="car-name" required="" class="form-control">
-                </div>
+    <div id="car-view" class="container-fluid">
+        <div class="col-md-3">
+            <h4>Filters</h4>
+        </div>
+        <div class="col-md-9">
+            <div id="car-list" class="list-group">
+                <a href="#" class="list-group-item">
+                    <img src="../../public/images/uploads/toyota_corolla.jpg" class="img-thumbnail">    
+                    <div class="car-details">
+                            <h4>Toyota Corolla</h4>
+                            <p>Sedan</p>
+                            <p>$8/mile</p>
+                            <button class="btn btn-success">Add to cart</button>
+                    </div>
+                </a>
             </div>
-            <div class="form-group">
-                <label for="car-type" class="control-label col-sm-2">Car Type:</label>
-                <div class="col-sm-4">
-                <select name="car-type" id="car-type" class="form-control">
-                    <option selected="selected" disabled="disabled" style="display:none;">Select Car Type</option>
-                    <option value="hatchback">Hatchback</option>
-                    <option value="sedan">Sedan</option>
-                    <option value="suv">SUV</option>
-                    <option value="semi">Semi</option>
-                </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="car-capacity" class="control-label col-sm-2">Capacity:</label>
-                <div class="col-sm-4">
-                    <input type="number" name="car-capacity" id="car-capacity" class="form-control" min="1" max="6" placeholder="Total Capacity">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="car-cost" class="control-label col-sm-2">Cost:</label>
-                <div class="col-sm-2">
-                    <input type="number" name="car-cost" id="car-cost" class="form-control" min="5" max="20" placeholder="&dollar; / mile">
-                </div>
-                <label for="car-deposit" class="control-label col-sm-2">Deposit:</label>
-                <div class="col-sm-2">
-                    <input type="number" name="car-deposit" id="car-deposit" class="form-control" min="15" max="150" placeholder="&dollar;">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="car-color" class="control-label col-sm-2">Car Color:</label>
-                <div class="col-sm-4">
-                    <select name="car-color" id="car-color" class="form-control">
-                        <option selected="selected" disabled="disabled" style="display:none;">Select Car Color</option>
-                        <option value="black">Black</option>
-                        <option value="grey">Grey</option>
-                        <option value="silver">Silver</option>
-                        <option value="white">White</option>
-                        <option value="blue">Blue</option>
-                        <option value="red">Red</option>
-                    </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="car-image" class="control-label col-sm-2">Car Image:</label>
-                <div class="col-sm-2">
-                    <input type="file" name="car-image" id="car-image" class="file" data-show-preview="false">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <input type="submit" name="add-car" value="Add Car" class="btn btn-success">
-                  <input type="reset" name="reset" value="Reset" class="btn btn-danger">
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
     <!-- Page Content -->
 
@@ -233,9 +168,8 @@
                 <div class="col-sm-3 myCols">
                     <h5>Get started</h5>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Sign up</a></li>
-                        <li><a href="#">Downloads</a></li>
+                        <li><a href="../../index.php">Home</a></li>
+                        <li><a href="register.html">Sign up</a></li>
                     </ul>
                 </div>
                 <div class="col-sm-3 myCols">

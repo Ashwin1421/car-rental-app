@@ -1,0 +1,13 @@
+#car-view{
+	margin: 25px;
+	padding: 25px;
+}
+img.img-thumbnail {
+	height: 25%;
+	width: 25%;
+}
+
+.car-details{
+	float: right;
+	margin-right: 55%;
+}
