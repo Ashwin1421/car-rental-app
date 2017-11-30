@@ -3,27 +3,31 @@ $(document).ready(function(){
 	//car-view
 	var carlistdiv = $("#car-list");
 	//car details
-	var carname, carcost, cartype, carimage;
+	var carname, carcost, cartype, carimage, carcapacity;
 	$.ajax({
 		url: '../php/viewcars.php',
 		type: 'POST',
 		data: {
-			'carlist':'carlist'
+			'admincontrol':''
 		},
 		success: function(output){
 			output = JSON.parse(output);
 			for(i=0;i<output.length;i++){
 				carname = output[i]['name'];
-				carcost = output[i]['cost_per_mile'];
 				cartype = output[i]['type'];
+				carcost = output[i]['cost_per_hour'];
+				carcapacity = output[i]['capacity'];
 				carimage = output[i]['image'];
 				
-				var cardiv = carlistdiv.append("<a href='#' class='list-group-item'>");
-				cardiv.append("<img class='img-thumbnail' src='../../public/images/uploads/"+carimage+"' alt='"+carname+"'>");
-				var cardetails = cardiv.append("<div class='car-details'>");
-				cardetails.append("<h4>"+carname+"</h4>");
-				cardetails.append("<p>"+cartype+"</p>");
-				cardetails.append("<p>$"+carcost+"</p></div></a>");
+				carlistdiv.append(
+					"<a href='#' class='list-group-item'>"+
+					"<img class='img-thumbnail' src='../../public/images/uploads/"+carimage+"' alt='"+carname+"'>"+
+					"<div class='car-details'>"+
+					"<h4>"+carname+"<span class='pull-right'><button class='btn btn-success'>Add to cart</button></span></h4>"+
+					"<p>Type: "+cartype+"</p>"+
+					"<p><span class='glyphicon glyphicon-usd'></span>"+carcost+"/hr.</p>"+
+					"<p><span class='glyphicon glyphicon-user'></span>"+carcapacity+"</p>"+
+					"</div></a>");
 			}
 		},
 		error: function(err){

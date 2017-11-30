@@ -2,12 +2,21 @@
 	margin: 25px;
 	padding: 25px;
 }
-img.img-thumbnail {
+.img-thumbnail {
+	position: relative;
+	float: left;
+	height: 300px
+	width: 300px;
+}
+.list-group-item{
+	margin-top: 10%;
+	margin-bottom: 10%;
+}
+img.img-thumbnail{
 	height: 25%;
 	width: 25%;
 }
-
 .car-details{
-	float: right;
-	margin-right: 55%;
+	padding: 15px;
+	margin-left: 250px;
 }

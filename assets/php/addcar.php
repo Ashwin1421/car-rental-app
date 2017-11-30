@@ -5,12 +5,9 @@
 		$car_id = uniqid();
 		$cartype = $_POST["car-type"];
 		$carcapacity = intval($_POST["car-capacity"]);
-		$carcost = intval($_POST["car-cost"]);
-		$cardeposit = intval($_POST["car-deposit"]);
-		$carcolor = $_POST["car-color"];
+		$carcost = floatval($_POST["car-cost"]);
 		$image_file_name = basename($_FILES["car-image"]["name"]);
-		//
-		
+
 		//image uploads
 		$image_uploads_dir = "../../public/images/uploads/";
 		$target_image_file = $image_uploads_dir . basename($_FILES["car-image"]["name"]);
@@ -30,7 +27,7 @@
 		    $uploadOK = 0;
 		}
 		// Check file size
-		if ($_FILES["car-image"]["size"] > 500000) {
+		if ($_FILES["car-image"]["size"] > 500000000) {
 		    echo "Sorry, your file is too large.";
 		    $uploadOK = 0;
 		}
@@ -51,16 +48,21 @@
 		} else {
 		    if (move_uploaded_file($_FILES["car-image"]["tmp_name"], $target_image_file)) {
 		    	include 'dbconnect.php';
-				$sql = "INSERT INTO `cars`(`_id`, `name`, `cost_per_mile`, `deposit`, `availability`, `type`, `color`, `image`, `capacity`) 
-						VALUES
-					 	('$car_id', '$carname', $carcost, $cardeposit, true,
-				    			 '$cartype','$carcolor','$image_file_name',$carcapacity)";
-				$res = mysqli_query($conn, $sql);
-				if(!$res){
-					echo "Error in query";
-				}else{
+				$sql1 = "INSERT INTO car(_id, name, type, image) 
+						 VALUES ('$car_id','$carname','$cartype','$image_file_name')";
+				$sql2 = "INSERT INTO car_details(car_id, capacity, cost_per_hour) 
+						 VALUES ('$car_id', $carcapacity, $carcost)";
+
+				$res1 = mysqli_query($conn, $sql1);
+				$res2 = mysqli_query($conn, $sql2);
+				if(!$res1){
+					echo "Error in query1";
+				}
+				if(!$res2){
+					echo "Error in query2";
+				}
+				if($res1 && $res2){
 					header('Location: ../views/addcarform.php');
-					echo "<br>The file ". basename( $_FILES["car-image"]["name"]). " has been uploaded.";
 				}
 		    } else {
 		        echo "Sorry, there was an error uploading your file.";

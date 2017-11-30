@@ -21,11 +21,15 @@
 		$password = strip_tags($password);
 		$password = htmlspecialchars($password);
 
+		$address = trim($_POST['address']);
+		$address = strip_tags($address);
+		$address = htmlspecialchars($address);
+
 		$password_hash = hash('sha512', $password);
 		$_id = uniqid($username);
 
-		$sql = "INSERT INTO users(_id,f_name,l_name,username,password,admin) 
-				VALUES('$_id', '$fname', '$lname', '$username', '$password_hash', false)";
+		$sql = "INSERT INTO user(_id,f_name,l_name,username,password,address) 
+				VALUES('$_id', '$fname', '$lname', '$username', '$password_hash', '$address')";
 
 		include_once 'dbconnect.php';
 		$res = mysqli_query($conn, $sql);

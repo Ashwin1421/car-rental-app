@@ -138,20 +138,11 @@
 
     <!-- Page Content -->
     <div id="car-view" class="container-fluid">
-        <div class="col-md-3">
+        <div class="col-md-2">
             <h4>Filters</h4>
         </div>
-        <div class="col-md-9">
-            <div id="car-list" class="list-group">
-                <a href="#" class="list-group-item">
-                    <img src="../../public/images/uploads/toyota_corolla.jpg" class="img-thumbnail">    
-                    <div class="car-details">
-                            <h4>Toyota Corolla</h4>
-                            <p>Sedan</p>
-                            <p>$8/mile</p>
-                            <button class="btn btn-success">Add to cart</button>
-                    </div>
-                </a>
+        <div class="col-md-10">
+            <div id="car-list" class="list-group clearfix">
             </div>
         </div>
     </div>

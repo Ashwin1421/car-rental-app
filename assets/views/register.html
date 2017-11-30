@@ -15,7 +15,9 @@
     <div id="register-form" class="card card-container">
             <p id="profile-name" class="profile-name-card"></p>
                 <form class="form-horizontal" action="../php/register.php" method="POST">
-                    <h3>Create New Account</h3><br>
+                    <h3>
+                    <span class="glyphicon glyphicon-user"></span>
+                    New Account</h3><br>
                     <div id="name-div" class="form-group has-feedback">
                         <div class="col-sm-6">
                         <input type="text" name="fname" id="fname" class="form-control" placeholder="First Name" required>
@@ -26,7 +28,12 @@
                         <span id="lname-span" class="glyphicon form-control-feedback"></span>
                         </div>
                     </div>
-                    
+                    <div id='address-div' class="form-group has-feedback">
+                        <div class="col-sm-12">
+                            <input id="address" type="text" name="address" placeholder="Address" class="form-control" required>
+                            <span id="address-span" class="glyphicon form-control-feedback"></span>
+                        </div>
+                    </div>
                     <div id="username-div" class="form-group has-feedback">
                         <div class="col-sm-12">
                         <input type="text" name="username" id="username" class="form-control" placeholder="Set Username" required>

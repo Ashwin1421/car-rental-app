@@ -1,7 +1,8 @@
 #car-rental-form {
-    margin: 25px;
-    padding: 50px;
+    margin-top: 150px;
+    margin-bottom: 50px;
+    padding: 25px;
     border: 1px solid #F7F7F7;
     border-radius: 5px;
-    background:rgba(255,255,255,0.75);
+    background:rgba(255,255,255,0.85);
 }

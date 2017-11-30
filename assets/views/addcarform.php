@@ -13,29 +13,12 @@
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/add-form.css">
-    <link rel="stylesheet" type="text/css" href="../css/carousel.css">
-    <script type="text/javascript" src="../js/carousel.js"></script>
 </head>
 
 <body>
 <?php
     session_start();
 ?>
-<!-- Background carousel -->
-<div class="carousel slide carousel-fade" data-ride="carousel">
-
-    <!-- Wrapper for slides -->
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-        </div>
-        <div class="item">
-        </div>
-        <div class="item">
-        </div>
-    </div>
-</div>
-<!-- Background carousel -->
-
 
 <div class="content">
     <!-- Navigation -->
@@ -172,7 +155,6 @@
                     <option value="hatchback">Hatchback</option>
                     <option value="sedan">Sedan</option>
                     <option value="suv">SUV</option>
-                    <option value="semi">Semi</option>
                 </select>
                 </div>
             </div>
@@ -185,25 +167,7 @@
             <div class="form-group">
                 <label for="car-cost" class="control-label col-sm-2">Cost:</label>
                 <div class="col-sm-2">
-                    <input type="number" name="car-cost" id="car-cost" class="form-control" min="5" max="20" placeholder="&dollar; / mile">
-                </div>
-                <label for="car-deposit" class="control-label col-sm-2">Deposit:</label>
-                <div class="col-sm-2">
-                    <input type="number" name="car-deposit" id="car-deposit" class="form-control" min="15" max="150" placeholder="&dollar;">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="car-color" class="control-label col-sm-2">Car Color:</label>
-                <div class="col-sm-4">
-                    <select name="car-color" id="car-color" class="form-control">
-                        <option selected="selected" disabled="disabled" style="display:none;">Select Car Color</option>
-                        <option value="black">Black</option>
-                        <option value="grey">Grey</option>
-                        <option value="silver">Silver</option>
-                        <option value="white">White</option>
-                        <option value="blue">Blue</option>
-                        <option value="red">Red</option>
-                    </select>
+                    <input type="number" step="0.01" name="car-cost" id="car-cost" class="form-control" min="4.99" max="99.99" placeholder="&dollar; / hour">
                 </div>
             </div>
             <div class="form-group">

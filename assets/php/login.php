@@ -12,7 +12,7 @@
 
 		$password_hash = hash('sha512', $password);
 
-		$sql = "SELECT * FROM users WHERE username='$username' AND password='$password_hash'";
+		$sql = "SELECT * FROM user WHERE username='$username' AND password='$password_hash'";
 		include 'dbconnect.php';
 		$res = mysqli_query($conn, $sql);
 

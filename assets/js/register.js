@@ -4,6 +4,7 @@ $(document).ready(function(){
 	var confirmpassword = $("#confirm-password");
 	var firstname = $("#fname");
 	var lastname = $("#lname");
+	var address = $("#address");
 
 	//check if all fields are set or not
 	//by default none of them are set.
@@ -13,6 +14,7 @@ $(document).ready(function(){
 	var isconfirmpasswordset = false;
 	var isfnameset = false;
 	var islnameset = false;
+	var isaddressset = false;
 	//check if both password fields are equal
 	var equalpasswords = false;
 
@@ -56,6 +58,24 @@ $(document).ready(function(){
 		}
 	});
 
+	address.blur(function(){
+		var regex = /^[#.0-9a-zA-Z\s,-]+$/;
+		var addresstext = address.val();
+		var addressdiv = $("#address-div");
+		var addressspan = $("#address-span");
+		if(!addresstext){
+			addressdiv.addClass("has-error");
+			addressspan.addClass("glyphicon-remove");
+		}
+		if(regex.test(addresstext) && addresstext.length>0){
+			addressdiv.removeClass("has-error");
+			addressdiv.addClass("has-success");
+			addressspan.removeClass("glyphicon-remove");
+			addressspan.addClass("glyphicon-ok");
+			isaddressset = true;
+		}
+
+	});
 	username.blur(function(){
 		var regex = /^[a-zA-Z0-9]+$/;
 		var username_text = username.val();
@@ -120,7 +140,7 @@ $(document).ready(function(){
 			password_div.addClass("has-error");
 			password_span.addClass("glyphicon-remove");
 		}
-		if(regex.test(password_text) && password_text.length>8){
+		if(regex.test(password_text) && password_text.length>=8){
 			password_div.removeClass("has-error");
 			password_div.addClass("has-success");
 			password_span.removeClass("glyphicon-remove");
@@ -141,7 +161,7 @@ $(document).ready(function(){
 			confirmpassword_div.addClass("has-error");
 			confirmpassword_span.addClass("glyphicon-remove");
 		}
-		if(regex.test(confirmpassword_text) && confirmpassword_text.length>8){
+		if(regex.test(confirmpassword_text) && confirmpassword_text.length>=8){
 			confirmpassword_div.removeClass("has-error");
 			confirmpassword_div.addClass("has-success");
 			confirmpassword_span.removeClass("glyphicon-remove");
@@ -157,6 +177,7 @@ $(document).ready(function(){
 		if(
 			isfnameset &&
 			islnameset && 
+			isaddressset &&
 			isusernameset && 
 			isusernameavailable &&
 			ispasswordset && 
