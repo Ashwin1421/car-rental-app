@@ -12,7 +12,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <link rel="stylesheet" type="text/css" href="../css/form.css">
+    <link rel="stylesheet" type="text/css" href="../css/viewcars.css">
 </head>
 
 <body>
@@ -97,9 +97,13 @@
         <?php if(isset($_SESSION["username"])){ ?>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="">
-                    My Cart
-                    <span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
+                    <a href="#">
+                    My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
+                    <?php 
+                        if(isset($_SESSION["booking_count"])){ 
+                            echo $_SESSION["booking_count"];
+                        }
+                    ?>
                     </a>
                 </li>
             </ul>
@@ -136,48 +140,76 @@
     </nav>
 
     <!-- Page Content -->
-    <div class="container">
-        <form id="car-add-form" class="form-horizontal" action="../php/addcar.php" method="POST" 
-        enctype="multipart/form-data">
-            <h4>Add a new car</h4>
-            <hr>
-            <div class="form-group">
-                <label for="car-name" class="control-label col-sm-2">Car Name:</label>
-                <div class="col-sm-4">
-                    <input type="text" name="car-name" id="car-name" required="" class="form-control">
+    <div id="user-cart-view" class="container-fluid">
+        <div class="well well-sm">
+            <strong>Review Order</strong>
+        </div>
+        <!-- List of orders -->
+        <div id="products" class="row list-group">
+            <?php if(isset($_GET["id"])){ 
+                    $_id = $_GET["id"];
+                    $_id = strip_tags($_id);
+                    $_id = htmlspecialchars($_id);
+
+                    $total_period = intval($_GET["p"]);
+                    $d1 = $_GET["d1"];
+                    $d2 = $_GET["d2"];
+
+                    $order_date = date("m/d/Y");
+                    include '../php/dbconnect.php';
+                    $sql = "SELECT name, type, capacity, location, price_per_day, image 
+                            FROM car, car_capacity
+                            WHERE `car`.`type` = `car_capacity`.`car_type`
+                            AND `car`.`_id` = '$_id'
+                            AND `car`.`deleted` = false 
+                            AND `car`.`status` = false";
+                    $res = mysqli_query($conn, $sql);
+                    $row = mysqli_fetch_assoc($res);
+                    $car_name = $row['name'];
+                    $car_type = $row['type'];
+                    $car_capacity = $row['capacity'];
+                    $car_cost = $row['price_per_day'];
+                    $car_location = $row['location'];
+                    $car_image = $row['image'];
+
+                    $total_rent_amt = $total_period * $car_cost;
+                    $user_id = $_SESSION["uid"];
+            ?>
+                <div class="item  col-xs-4 col-lg-4">
+                    <div class="thumbnail">
+                        <img class="car-img group list-group-image" 
+                        src="../../public/images/uploads/<?php echo $car_image; ?>" 
+                        alt="<?php echo $car_name; ?>" />
+                        <div class="caption">
+                            <h4 class="group inner list-group-item-heading"><?php echo $car_name;?></h4>
+                            <p class="group inner list-group-item-text">Type: <?php echo $car_type;?></p>
+                            <p class="group inner list-group-item-text">Location: <?php echo $car_location;?></p>
+                            <p class="group inner list-group-item-text">Capacity: <?php echo $car_capacity;?></p>
+                            <p class="group inner list-group-item-text">Order Date: <?php echo $order_date;?></p>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <p class="lead">Total: $<?php echo $total_rent_amt;?></p>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <form>
+                                        <input type="text" name="pick-up-date" value="<?php echo $d1;?>">
+                                        <input type="text" name="drop-off-date" value="<?php echo $d2;?>">
+                                        <input type="number" step="0.01" name="rent-amount" 
+                                        value="<?php echo $total_rent_amt;?>">
+                                        <input type="text" name="car-id" value="<?php echo $_id;?>">
+                                        <input type="text" name="user-id" value="<?php echo $user_id;?>">
+                                        <input type="submit" name="checkout" value="Checkout" class="btn btn-success">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label for="car-type" class="control-label col-sm-2">Car Type:</label>
-                <div class="col-sm-4">
-                <select name="car-type" id="car-type" class="form-control">
-                    <option selected="selected" disabled="disabled" style="display:none;">Select Car Type</option>
-                    <option value="hatchback">Hatchback</option>
-                    <option value="sedan">Sedan</option>
-                    <option value="suv">SUV</option>
-                </select>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="car-cost" class="control-label col-sm-2">Cost:</label>
-                <div class="col-sm-2">
-                    <input type="number" step="0.01" name="car-cost" id="car-cost" class="form-control" min="4.99" max="99.99" placeholder="&dollar; / hour">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="car-image" class="control-label col-sm-2">Car Image:</label>
-                <div class="col-sm-2">
-                    <input type="file" name="car-image" id="car-image" class="file" data-show-preview="false">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                  <input type="submit" name="add-car" value="Add Car" class="btn btn-success">
-                  <input type="reset" name="reset" value="Reset" class="btn btn-danger">
-                </div>
-            </div>
-        </form>
+            <?php } ?>
+        </div>
+        <!-- List of orders -->
     </div>
+    
     <!-- Page Content -->
 
 
@@ -191,9 +223,8 @@
                 <div class="col-sm-3 myCols">
                     <h5>Get started</h5>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Sign up</a></li>
-                        <li><a href="#">Downloads</a></li>
+                        <li><a href="../../index.php">Home</a></li>
+                        <li><a href="register.html">Sign up</a></li>
                     </ul>
                 </div>
                 <div class="col-sm-3 myCols">

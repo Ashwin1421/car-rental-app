@@ -98,9 +98,13 @@
         <?php if(isset($_SESSION["username"])){ ?>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="">
-                    My Cart
-                    <span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
+                    <a href="cartview.php?id=<?php echo $car_id;?>&p=<?php echo $period;?>">
+                    My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
+                    <?php 
+                        if(isset($_SESSION["booking_count"])){ 
+                            echo $_SESSION["booking_count"];
+                        }
+                    ?>
                     </a>
                 </li>
             </ul>
@@ -181,6 +185,7 @@
             </div>
             
             <div id="products" class="row list-group">
+            <!-- Admin car view -->
             <?php
                 if(isset($_SESSION['admin'])) { if($_SESSION['admin'] == 1) { 
                     include '../php/dbconnect.php';
@@ -196,16 +201,16 @@
                         $active_page = 1;
                     }
 
-                    $sql1 = "SELECT _id, name, type, capacity, cost_per_hour, image 
-                            FROM car, car_details WHERE `car`.`_id` = `car_details`.`car_id` 
-                            AND `car`.`deleted` = false";
+                    $sql1 = "SELECT _id, name, type, location, capacity, price_per_day, image 
+                            FROM car, car_capacity WHERE `car`.`type` = `car_capacity`.`car_type`
+                            AND `car`.`deleted`=false";
                     $res1 = mysqli_query($conn, $sql1);
                     $total_rows = mysqli_num_rows($res1);
                     $total_pages = $total_rows / $products_per_page;
                     $total_pages = ceil($total_pages);
 
-                    $sql2 = "SELECT _id, name, type, capacity, cost_per_hour, image 
-                            FROM car, car_details WHERE `car`.`_id` = `car_details`.`car_id`
+                    $sql2 = "SELECT _id, name, type, location, capacity, price_per_day, image 
+                            FROM car, car_capacity WHERE `car`.`type` = `car_capacity`.`car_type`
                             AND `car`.`deleted`=false
                             LIMIT $offset, $products_per_page";
                     $res2 = mysqli_query($conn, $sql2);
@@ -214,9 +219,11 @@
                         $car_id = $row['_id'];
                         $carname = $row['name'];
                         $cartype = $row['type'];
-                        $carcost = $row['cost_per_hour'];
+                        $carlocation = $row['location'];
+                        $carcost = $row['price_per_day'];
                         $carcapacity = $row['capacity'];
                         $carimage = $row['image'];
+
             ?>
                 <div class="item  col-xs-4 col-lg-4">
                     <div class="thumbnail">
@@ -225,8 +232,8 @@
                         alt="<?php echo $carname; ?>" />
                         <div class="caption">
                             <h4 class="group inner list-group-item-heading"><?php echo $carname;?></h4>
-                            <p class="group inner list-group-item-text">_id: <?php echo $car_id; ?></p>
                             <p class="group inner list-group-item-text">Type: <?php echo $cartype;?></p>
+                            <p class="group inner list-group-item-text">Location: <?php echo $carlocation;?></p>
                             <p class="group inner list-group-item-text">Capacity: <?php echo $carcapacity;?></p>
                             <div class="row">
                                 <div class="col-xs-12 col-md-4">
@@ -243,7 +250,99 @@
                     </div>
                 </div>
             <?php }}}?>
+            <!-- Admin car view -->
+            <!-- user car view -->
+            <?php
+                if(isset($_POST["search"])) { 
+                    $car_location = $_POST["pick-up-location"];
+                    $car_location = strip_tags($car_location);
+                    $car_location = htmlspecialchars($car_location);
+
+                    $pick_up_date = $_POST["pick-up-date"];
+                    $drop_off_date = $_POST["drop-off-date"];
+
+                    $d1= new DateTime($pick_up_date);
+                    $d2= new DateTime($drop_off_date);
+
+                    $period = $d2->diff($d1)->days;
+
+                    $car_type = $_POST["car-type"];
+                    $car_type = strip_tags($car_type);
+                    $car_type = htmlspecialchars($car_type);
+
+
+
+                    $cars_per_page = 3;
+                    if(isset($_GET['page'])){
+                        $active_page = trim($_GET['page']);
+                        $active_page = strip_tags($active_page);
+                        $active_page = htmlspecialchars($active_page);
+                        $offset = ($active_page-1)*$cars_per_page;
+                    }else{
+                        $offset = 0;
+                        $active_page = 1;
+                    }
+                    include '../php/dbconnect.php';
+                    $sql1 = "SELECT _id, name, type, location, capacity, image, price_per_day
+                            FROM car, car_capacity
+                            WHERE `car`.`type` = `car_capacity`.`car_type` 
+                            AND `car`.`deleted`=false 
+                            AND `car`.`status`=false
+                            AND `car`.`type` = '$car_type'
+                            AND `car`.`location` = '$car_location'
+                            LIMIT $offset, $cars_per_page";
+                    $res1 = mysqli_query($conn, $sql1);
+
+                    $sql2 = "SELECT count(*) 
+                             FROM car, car_capacity
+                             WHERE `car`.`type` = `car_capacity`.`car_type` 
+                             AND `car`.`deleted`=false 
+                             AND `car`.`status`=false
+                             AND `car`.`type` = '$car_type'
+                             AND `car`.`location` = '$car_location'";
+                    $res2 = mysqli_query($conn, $sql2);
+
+                    $total_rows = mysqli_num_rows($res2);
+                    $total_pages = $total_rows / $cars_per_page;
+
+                    while($row = mysqli_fetch_assoc($res1)){
+                        $car_id = $row["_id"];
+                        $car_name = $row["name"];
+                        $car_type = $row["type"];
+                        $car_capacity = $row["capacity"];
+                        $car_cost = $row["price_per_day"];
+                        $car_location = $row["location"];
+                        $car_image = $row["image"];
+            ?>
+
+                <div class="item  col-xs-4 col-lg-4">
+                    <div class="thumbnail">
+                        <img class="car-img group list-group-image" 
+                        src="../../public/images/uploads/<?php echo $car_image; ?>" 
+                        alt="<?php echo $car_name; ?>" />
+                        <div class="caption">
+                            <h4 class="group inner list-group-item-heading"><?php echo $car_name;?></h4>
+                            <p class="group inner list-group-item-text">Type: <?php echo $car_type;?></p>
+                            <p class="group inner list-group-item-text">Location: <?php echo $car_location;?></p>
+                            <p class="group inner list-group-item-text">Capacity: <?php echo $car_capacity;?></p>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <p class="lead">$<?php echo $car_cost;?></p>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <?php $_SESSION["booking_count"]=1; ?>
+                                    <a class="btn btn-success" 
+                                    href="cartview.php?id=<?php echo $car_id;?>&p=<?php echo $period;?>&d1=<?php echo $pick_up_date;?>&d2=<?php echo $drop_off_date;?>">Book Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } } ?>
+            <!-- user car view -->
+
             </div>
+
             <div class="text-center">
                 <ul class="pagination">
                     <?php 

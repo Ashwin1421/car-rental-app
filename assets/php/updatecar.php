@@ -11,6 +11,10 @@
 		$cartype = strip_tags($cartype);
 		$cartype = htmlspecialchars($cartype);
 
+		$carlocation = $_POST["car-location"];
+		$carlocation = strip_tags($carlocation);
+		$carlocation = htmlspecialchars($carlocation);
+
 		$carcapacity = intval($_POST["car-capacity"]);
 		$carcapacity = strip_tags($carcapacity);
 		$carcapacity = htmlspecialchars($carcapacity);
@@ -76,13 +80,14 @@
 			$sql1 = "UPDATE car
 					 SET name = '$carname',
 						 type = '$cartype',
+						 location = '$carlocation',
+						 price_per_day = $carcost,
 						 image = '$new_car_image'
 					 WHERE _id = '$car_id'";
 
-			$sql2 = "UPDATE car_details
-					 SET capacity = $carcapacity,
-						 cost_per_hour = $carcost
-					 WHERE car_id = '$car_id'";
+			$sql2 = "UPDATE car_capacity
+					 SET capacity = $carcapacity
+					 WHERE car_type = '$cartype'";
 
 			$res1 = mysqli_query($conn, $sql1);
 			$res2 = mysqli_query($conn, $sql2);
@@ -98,13 +103,14 @@
 		}else{
 			$sql1 = "UPDATE car
 					 SET name = '$carname',
-						 type = '$cartype'
+						 type = '$cartype',
+						 location = '$carlocation',
+						 price_per_day = $carcost
 					 WHERE _id = '$car_id'";
 
-			$sql2 = "UPDATE car_details
-					 SET capacity = $carcapacity,
-						 cost_per_hour = $carcost
-					 WHERE car_id = '$car_id'";
+			$sql2 = "UPDATE car_capacity
+					 SET capacity = $carcapacity
+					 WHERE car_type = '$cartype'";
 
 			$res1 = mysqli_query($conn, $sql1);
 			$res2 = mysqli_query($conn, $sql2);

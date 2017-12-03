@@ -12,14 +12,10 @@
 		$cartype = strip_tags($cartype);
 		$cartype = htmlspecialchars($cartype);
 
-		$carcapacity = intval($_POST["car-capacity"]);
-		$carcapacity = strip_tags($carcapacity);
-		$carcapacity = htmlspecialchars($carcapacity);
-
 		$carcost = floatval($_POST["car-cost"]);
 		$carcost = strip_tags($carcost);
 		$carcost = htmlspecialchars($carcost);
-		
+
 		$image_file_name = basename($_FILES["car-image"]["name"]);
 
 		//image uploads
@@ -62,20 +58,15 @@
 		} else {
 		    if (move_uploaded_file($_FILES["car-image"]["tmp_name"], $target_image_file)) {
 		    	include 'dbconnect.php';
-				$sql1 = "INSERT INTO car(_id, name, type, image) 
-						 VALUES ('$car_id','$carname','$cartype','$image_file_name')";
-				$sql2 = "INSERT INTO car_details(car_id, capacity, cost_per_hour) 
-						 VALUES ('$car_id', $carcapacity, $carcost)";
+				$sql1 = "INSERT INTO car(_id, name, type, price_per_day, image) 
+						 VALUES ('$car_id','$carname','$cartype', $carcost, '$image_file_name')";
 
 				$res1 = mysqli_query($conn, $sql1);
-				$res2 = mysqli_query($conn, $sql2);
 				if(!$res1){
 					echo "Error in query1";
 				}
-				if(!$res2){
-					echo "Error in query2";
-				}
-				if($res1 && $res2){
+
+				if($res1){
 					header('Location: ../views/addcarform.php');
 				}
 		    } else {

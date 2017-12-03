@@ -24,16 +24,17 @@
         $car_id = strip_tags($car_id);
         $car_id = htmlspecialchars($car_id);
 
-        $sql = "SELECT name, type, capacity, cost_per_hour, image
-                FROM car, car_details 
-                WHERE `car`.`_id` = `car_details`.`car_id`
+        $sql = "SELECT name, type, location, capacity, price_per_day, image
+                FROM car, car_capacity
+                WHERE `car`.`type` = `car_capacity`.`car_type`
                 AND `car`.`_id` = '$car_id'";
         $res = mysqli_query($conn, $sql);
         $row = mysqli_fetch_assoc($res);
         $car_name = $row['name'];
         $car_type = $row['type'];
+        $car_location = $row['location'];
         $car_capacity = $row['capacity'];
-        $car_cost = $row['cost_per_hour'];
+        $car_cost = $row['price_per_day'];
         $car_image = $row['image'];
         $_SESSION['car_id'] = $car_id;
         $_SESSION['old_car_image'] = $car_image;
@@ -171,6 +172,12 @@
                 <label for="car-type" class="control-label col-sm-2">Car Type:</label>
                 <div class="col-sm-4">
                 <input type="text" value="<?php echo $car_type;?>" name="car-type" id="car-type" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="car-location" class="control-label col-sm-2">Car Location:</label>
+                <div class="col-sm-4">
+                <input type="text" value="<?php echo $car_location;?>" name="car-location" id="car-location" class="form-control" required>
                 </div>
             </div>
             <div class="form-group">

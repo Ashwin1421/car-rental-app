@@ -25,8 +25,14 @@
 				$_SESSION["username"] =$username;
 				$_SESSION["fname"] = $row["f_name"];
 				$_SESSION["admin"] = $row["admin"];
+				$_SESSION["uid"] = $row["_id"];
 
-				header("Location: ../../index.php");
+				if(isset($_SESSION["booking_count"])){
+					
+					header("Location: ../views/cartview.php?id=$id");
+				}else{
+					header("Location: ../../index.php");	
+				}
 			}
 		}
 	}
