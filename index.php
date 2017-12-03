@@ -118,7 +118,7 @@
         <?php if(isset($_SESSION["username"])){ ?>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a data-toggle="dropdown" class="dropdown-toggle" href="">
+                    <a href="assets/views/cartview.php">
                     My Cart
                     <span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
                     </a>
@@ -158,7 +158,7 @@
 
     <!-- Page Content -->
     <div class="container">
-        <form id="car-rental-form" class="form-inline" method="POST" action="assets/php/viewcars.php" enctype="multipart/form-data">
+        <form id="car-rental-form" class="form-inline" method="POST" action="assets/views/carview.php" enctype="multipart/form-data">
             <h3>Rent a car</h3>
             <hr noshade>
             <div class="form-group">
@@ -170,13 +170,6 @@
                     <option value="Houston">Houston</option>
                 </select>
                 <input name="pick-up-date" id="pick-up-date" type="text" class="form-control" placeholder="Pick up date" / required>
-                <select name="drop-off-location" id="drop-off-location" class="form-control" required>
-                    <option selected="selected" disabled="disabled" style="display:none;">Drop-off location</option>
-                    <option value="Dallas">Dallas</option>
-                    <option value="Irving">Irving</option>
-                    <option value="Austin">Austin</option>
-                    <option value="Houston">Houston</option>
-                </select>
                 <input name="drop-off-date" id="drop-off-date" type="text" class="form-control" placeholder="Drop-off date" required />
                 <select name="car-type" id="car-type" class="form-control" required>
                     <option selected="selected" disabled="disabled" style="display:none;">Select Car Type</option>
@@ -186,7 +179,11 @@
                   </select>
             </div>
             <div class="form-group">
+                <?php if(isset($_SESSION["username"])){ ?>
                 <input id="car-search" type="submit" name="search" value="Search" class="btn btn-success">
+                <?php }else{?>
+                <a id="car-search" href="assets/views/login.html" class="btn btn-success">Search</a>
+                <?php }?>
                 <input id="reset" type="reset" name="reset" value="Reset" class="btn btn-danger">
             </div>
         </form>
