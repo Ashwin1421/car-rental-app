@@ -1,11 +1,25 @@
 <?php
 	session_start();
 	if(isset($_POST["add-car"])){
+		
 		$carname = $_POST["car-name"];
+		$carname = strip_tags($carname);
+		$carname = htmlspecialchars($carname);
+
 		$car_id = uniqid();
+		
 		$cartype = $_POST["car-type"];
+		$cartype = strip_tags($cartype);
+		$cartype = htmlspecialchars($cartype);
+
 		$carcapacity = intval($_POST["car-capacity"]);
+		$carcapacity = strip_tags($carcapacity);
+		$carcapacity = htmlspecialchars($carcapacity);
+
 		$carcost = floatval($_POST["car-cost"]);
+		$carcost = strip_tags($carcost);
+		$carcost = htmlspecialchars($carcost);
+		
 		$image_file_name = basename($_FILES["car-image"]["name"]);
 
 		//image uploads

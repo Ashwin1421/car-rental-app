@@ -139,13 +139,170 @@
     <!-- Page Content -->
     <div id="car-view" class="container-fluid">
         <div class="col-md-2">
-            <h4>Filters</h4>
-        </div>
-        <div class="col-md-10">
-            <div id="car-list" class="list-group clearfix">
+            <div class="well well-sm">
+                <strong>Filter Results</strong>
+                <span class="glyphicon glyphicon-filter"></span>
+            </div>
+            <div class="well well-sm">
+                <div class="btn-group">
+                    <form id="car-filter-form" method="POST" enctype="multipart/form-data">
+                        <label>Type</label><br>
+                        <div class="radio">
+                            <label><input type="radio" name="hatchback-filter">Hatchback</label>    
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="sedan-filter">Sedan</label>    
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="suv-filter">SUV</label>    
+                        </div>
+                        <label>Cost</label><br>
+                        <div class="radio">
+                            <label><input type="radio" name="filter-type">Low to High</label>    
+                        </div>
+                        <div class="radio">
+                            <label><input type="radio" name="filter-type">High to Low</label>    
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
+        <div class="col-md-10">
+            <div class="well well-sm">
+                <div class="text-right">
+                    <strong>Display</strong>
+                    <div class="btn-group">
+                        <a href="#" id="list" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-th-list"></span></a>
+                        <a href="#" id="grid" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-th"></span></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="products" class="row list-group">
+            <?php
+                if(isset($_SESSION['admin'])) { if($_SESSION['admin'] == 1) { 
+                    include '../php/dbconnect.php';
+                    $products_per_page = 3;
+                    
+                    if(isset($_GET['page'])){
+                        $active_page = trim($_GET['page']);
+                        $active_page = strip_tags($active_page);
+                        $active_page = htmlspecialchars($active_page);
+                        $offset = ($active_page-1)*$products_per_page;
+                    }else{
+                        $offset = 0;
+                        $active_page = 1;
+                    }
+
+                    $sql1 = "SELECT _id, name, type, capacity, cost_per_hour, image 
+                            FROM car, car_details WHERE `car`.`_id` = `car_details`.`car_id` 
+                            AND `car`.`deleted` = false";
+                    $res1 = mysqli_query($conn, $sql1);
+                    $total_rows = mysqli_num_rows($res1);
+                    $total_pages = $total_rows / $products_per_page;
+                    $total_pages = ceil($total_pages);
+
+                    $sql2 = "SELECT _id, name, type, capacity, cost_per_hour, image 
+                            FROM car, car_details WHERE `car`.`_id` = `car_details`.`car_id`
+                            AND `car`.`deleted`=false
+                            LIMIT $offset, $products_per_page";
+                    $res2 = mysqli_query($conn, $sql2);
+
+                    while($row = mysqli_fetch_assoc($res2)) {
+                        $car_id = $row['_id'];
+                        $carname = $row['name'];
+                        $cartype = $row['type'];
+                        $carcost = $row['cost_per_hour'];
+                        $carcapacity = $row['capacity'];
+                        $carimage = $row['image'];
+            ?>
+                <div class="item  col-xs-4 col-lg-4">
+                    <div class="thumbnail">
+                        <img class="car-img group list-group-image" 
+                        src="../../public/images/uploads/<?php echo $carimage; ?>" 
+                        alt="<?php echo $carname; ?>" />
+                        <div class="caption">
+                            <h4 class="group inner list-group-item-heading"><?php echo $carname;?></h4>
+                            <p class="group inner list-group-item-text">_id: <?php echo $car_id; ?></p>
+                            <p class="group inner list-group-item-text">Type: <?php echo $cartype;?></p>
+                            <p class="group inner list-group-item-text">Capacity: <?php echo $carcapacity;?></p>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-4">
+                                    <p class="lead">$<?php echo $carcost;?></p>
+                                </div>
+                                <div class="col-xs-12 col-md-4">
+                                    <a class="btn btn-success" href="editcarform.php?id=<?php echo $car_id;?>">Update</a>
+                                </div>
+                                <div class="col-xs-12 col-md-4">
+                                    <a href="carview.php?dl=<?php echo $car_id;?>" class="btn btn-danger">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php }}}?>
+            </div>
+            <div class="text-center">
+                <ul class="pagination">
+                    <?php 
+                        for($page_no=1 ; $page_no <= $total_pages ; $page_no++){
+                            if($page_no == $active_page) {       
+                    ?>
+                    <li class="active"><a href="carview.php?page=<?php echo $page_no;?>"><?php echo $page_no;?></a></li>
+                        <?php }else{ ?>
+                    <li><a href="carview.php?page=<?php echo $page_no;?>"><?php echo $page_no; ?></a></li>
+                        <?php } }?>
+                </ul>
+            </div>
+            
+        </div>
     </div>
+    <!-- Modal -->
+    <?php $dl_id; if(isset($_GET['dl'])) {?>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#deleteConfirmation").modal("show");
+        });
+    </script>
+    <?php $dl_id = $_GET['dl']; }?>
+    <div id="deleteConfirmation" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Delete Confirmation</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you wish to delete this car from the database ?</p>
+            </div>
+            <div class="modal-footer">
+                <form method="POST" action="carview.php">
+                <input type="hidden" name="dl-id" value="<?php echo $dl_id;?>">
+                <input type="submit" name="delete" class="btn btn-success" value="Yes">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+      </div>
+    </div>
+    <?php 
+        if(isset($_POST["delete"])){
+            $dl_id = $_POST["dl-id"];
+            include '../php/dbconnect.php';
+            $sql3 = "UPDATE car SET deleted=true WHERE _id='$dl_id'";
+            $res3 = mysqli_query($conn, $sql3);
+            if($res3){
+                header("Location: carview.php");
+            }else{
+                header("Location: ../../index.php");
+            }
+        }
+    ?>
     <!-- Page Content -->
 
 

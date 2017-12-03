@@ -18,6 +18,26 @@
 <body>
 <?php
     session_start();
+    include '../php/dbconnect.php';
+    if(isset($_GET['id'])){
+        $car_id = $_GET['id'];
+        $car_id = strip_tags($car_id);
+        $car_id = htmlspecialchars($car_id);
+
+        $sql = "SELECT name, type, capacity, cost_per_hour, image
+                FROM car, car_details 
+                WHERE `car`.`_id` = `car_details`.`car_id`
+                AND `car`.`_id` = '$car_id'";
+        $res = mysqli_query($conn, $sql);
+        $row = mysqli_fetch_assoc($res);
+        $car_name = $row['name'];
+        $car_type = $row['type'];
+        $car_capacity = $row['capacity'];
+        $car_cost = $row['cost_per_hour'];
+        $car_image = $row['image'];
+        $_SESSION['car_id'] = $car_id;
+        $_SESSION['old_car_image'] = $car_image;
+    }
 ?>
 
 <div class="content">
@@ -116,7 +136,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="">
+                            <a href="carview.php">
                                 Car List
                             </a>
                         </li>
@@ -137,48 +157,49 @@
 
     <!-- Page Content -->
     <div class="container">
-        <form id="car-add-form" class="form-horizontal" action="../php/addcar.php" method="POST" 
+        <form id="car-edit-form" class="form-horizontal" action="../php/updatecar.php" method="POST" 
         enctype="multipart/form-data">
-            <h4>Add a new car</h4>
+            <h4>Update car details</h4>
             <hr>
             <div class="form-group">
                 <label for="car-name" class="control-label col-sm-2">Car Name:</label>
                 <div class="col-sm-4">
-                    <input type="text" name="car-name" id="car-name" required="" class="form-control">
+                    <input type="text" value="<?php echo $car_name;?>" name="car-name" id="car-name" required="" class="form-control">
                 </div>
             </div>
             <div class="form-group">
                 <label for="car-type" class="control-label col-sm-2">Car Type:</label>
                 <div class="col-sm-4">
-                <select name="car-type" id="car-type" class="form-control">
-                    <option selected="selected" disabled="disabled" style="display:none;">Select Car Type</option>
-                    <option value="hatchback">Hatchback</option>
-                    <option value="sedan">Sedan</option>
-                    <option value="suv">SUV</option>
-                </select>
+                <input type="text" value="<?php echo $car_type;?>" name="car-type" id="car-type" class="form-control" required>
                 </div>
             </div>
             <div class="form-group">
                 <label for="car-capacity" class="control-label col-sm-2">Capacity:</label>
                 <div class="col-sm-4">
-                    <input type="number" name="car-capacity" id="car-capacity" class="form-control" min="1" max="6" placeholder="Total Capacity">
+                    <input type="number" value="<?php echo $car_capacity;?>" name="car-capacity" id="car-capacity" class="form-control" min="1" max="6" placeholder="Total Capacity">
                 </div>
             </div>
             <div class="form-group">
                 <label for="car-cost" class="control-label col-sm-2">Cost:</label>
                 <div class="col-sm-2">
-                    <input type="number" step="0.01" name="car-cost" id="car-cost" class="form-control" min="4.99" max="99.99" placeholder="&dollar; / hour">
+                    <input value="<?php echo $car_cost;?>" type="number" step="0.01" name="car-cost" id="car-cost" class="form-control" min="4.99" max="99.99" placeholder="&dollar; / day">
                 </div>
             </div>
             <div class="form-group">
-                <label for="car-image" class="control-label col-sm-2">Car Image:</label>
+                <label for="car-image" class="control-label col-sm-2">Old Car Image:</label>
                 <div class="col-sm-2">
-                    <input type="file" name="car-image" id="car-image" class="file" data-show-preview="false">
+                    <img id="car-img" class="img-thumbnail" src="../../public/images/uploads/<?php echo $car_image;?>" alt="<?php echo $car_name;?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="car-image" class="control-label col-sm-2">Update Car Image:</label>
+                <div class="col-sm-2">
+                    <input type="file" name="car-image" id="car-image" class="file" data-show-preview="true">
                 </div>
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-10">
-                  <input type="submit" name="add-car" value="Add Car" class="btn btn-success">
+                  <input type="submit" name="update-car" value="Update" class="btn btn-success">
                   <input type="reset" name="reset" value="Reset" class="btn btn-danger">
                 </div>
             </div>
