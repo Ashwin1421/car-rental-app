@@ -17,14 +17,21 @@
 		echo $user_id."<br>";
 		include 'dbconnect.php';
 
-		$sql = "INSERT INTO 
+		$sql1 = "UPDATE car 
+				 SET status=true 
+				 WHERE _id='$car_id' 
+				 AND deleted=false";
+		$res1 = mysqli_query($conn, $sql1);
+
+		$sql2 = "INSERT INTO 
 				rent_order(order_id, pickup_date, dropoff_date, rent_amount, car_id, user_id) 
 				VALUES 
 				('$order_id', STR_TO_DATE('$pick_up_date', '%m/%d/%Y'), STR_TO_DATE('$drop_off_date', '%m/%d/%Y'), $total_rent_amt, '$car_id','$user_id')";
 
-		$res = mysqli_query($conn, $sql);
-		if($res){
-			echo "success";
+		$res2 = mysqli_query($conn, $sql2);
+		if($res1 && $res2){
+
+			header("Location: ../views/cartview.php");
 		}else{
 			echo "error"."<br>";
 			echo mysqli_error($conn);
