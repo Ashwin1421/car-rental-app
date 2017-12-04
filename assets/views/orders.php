@@ -160,7 +160,7 @@
                 if($order_count == 0){
                     echo "<h4 class='text-center'>You have no orders yet. Please check your cart for any unchecked items.</h4><br>";
                 }else{
-                    $sql5 = "SELECT _id, name, type, capacity, pickup_date, dropoff_date, location, image, order_date, rent_amount 
+                    $sql5 = "SELECT _id, name, type, capacity, pickup_date, dropoff_date, location, image, order_date, rent_amount, order_id 
                              FROM car, car_capacity, rent_order 
                              WHERE `rent_order`.`user_id`= '$user_id' 
                              AND `rent_order`.`car_id` = `car`.`_id` 
@@ -172,9 +172,13 @@
                         $car_id = $row5['_id'];
                         $car_image = $row5['image'];
                         $car_type = $row5['type'];
-                        $car_location = $row5['capacity'];
+                        $car_location = $row5['location'];
+                        $car_capacity = $row5['capacity'];
                         $order_date = $row5['order_date'];
+                        $pickup_date = $row5['pickup_date'];
+                        $dropoff_date = $row5['dropoff_date'];
                         $total_rent_amt = $row5['rent_amount'];
+                        $order_id = $row5['order_id'];
             ?>
                 <div class="item  col-xs-4 col-lg-4">
                     <div class="thumbnail">
@@ -184,16 +188,18 @@
                         <div class="caption">
                             <h4 class="group inner list-group-item-heading"><?php echo $car_name;?></h4>
                             <p class="group inner list-group-item-text">Type: <?php echo $car_type;?></p>
-                            <p class="group inner list-group-item-text">Location: <?php echo $car_location;?></p>
+                            <p class="group inner list-group-item-text">Pick-Up Location: <?php echo $car_location;?></p>
                             <p class="group inner list-group-item-text">Capacity: <?php echo $car_capacity;?></p>
                             <p class="group inner list-group-item-text">Order Date: <?php echo $order_date;?></p>
+                            <p class="group inner list-group-item-text">Pick-Up Date: <?php echo $pickup_date;?></p>
+                            <p class="group inner list-group-item-text">Drop-Off Date: <?php echo $dropoff_date;?></p>
                             <div class="row">
                                 <div class="col-xs-12 col-md-6">
                                     <p class="lead">Total: $<?php echo $total_rent_amt;?></p>
                                 </div>
                                 <div class="col-xs-12 col-md-6">
                                     <form method="POST" action="../php/deleteorder.php" enctype="multipart/formdata">
-                                        <input type="submit" name="delete-order" value="Cancel Order" class="btn btn-danger">
+                                        <input type="submit" name="delete-order-from-orders" value="Cancel Order" class="btn btn-danger">
                                         <input type="text" name="order-id" value="<?php echo $order_id;?>" hidden>
                                         <input type="text" name="car-id" value="<?php echo $car_id;?>" hidden>
                                     </form>
