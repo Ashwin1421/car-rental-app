@@ -100,7 +100,7 @@
                 </li>
                 <li>
                     <?php if(isset($_SESSION["username"])){ ?>
-                        <a id="order-list" href="#">My Orders
+                        <a id="order-list" href="assets/views/orders.php">My Orders
                         </a>
                     <?php }?>
                 </li>
@@ -119,14 +119,16 @@
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <?php 
-                        include 'assets/php/dbconnect.php';
+                        include '../php/dbconnect.php';
                         $user_id = $_SESSION["uid"];
-                        $sql3 = "SELECT * FROM rent_order WHERE user_id= '$user_id'";
+                        $sql3 = "SELECT * FROM rent_order 
+                                 WHERE user_id= '$user_id' 
+                                 AND status=false";
                         $res3 = mysqli_query($conn, $sql3);
                         $row3 = mysqli_fetch_assoc($res3);
                         $count = mysqli_num_rows($res3); 
                     ?>
-                    <a href="assets/views/cartview.php?id=<?php echo $row3['order_id'];?>">
+                    <a href="assets/views/cartview.php?id=<?php echo $user_id;?>">
                     My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
                     <?php echo $count;?>
                     </a>
