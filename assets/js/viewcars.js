@@ -9,4 +9,23 @@ $(document).ready(function(){
     	$('#products .item').addClass('grid-group-item');
     });
 	
+
+	var applyfilterbtn = $("#apply-filter");
+	applyfilterbtn.hide();
+
+	var lhfilter = $("#lh-filter");
+	var hlfilter = $("#hl-filter");
+
+	lhfilter.change(function(){
+		applyfilterbtn.hide();
+		console.log(lhfilter.val());
+		applyfilterbtn.show();
+	});
+
+	hlfilter.change(function(){
+		applyfilterbtn.hide();
+		console.log(hlfilter.val());
+		applyfilterbtn.show();
+	});
+
 });
