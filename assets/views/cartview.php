@@ -97,13 +97,17 @@
         <?php if(isset($_SESSION["username"])){ ?>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="#">
-                    My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
                     <?php 
-                        if(isset($_SESSION["booking_count"])){ 
-                            echo $_SESSION["booking_count"];
-                        }
+                        include '../php/dbconnect.php';
+                        $user_id = $_SESSION["uid"];
+                        $sql3 = "SELECT * FROM rent_order WHERE user_id= '$user_id'";
+                        $res3 = mysqli_query($conn, $sql3);
+                        $row3 = mysqli_fetch_assoc($res3);
+                        $count = mysqli_num_rows($res3); 
                     ?>
+                    <a href="cartview.php?id=<?php echo $row3['order_id'];?>">
+                    My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
+                    <?php echo $count;?>
                     </a>
                 </li>
             </ul>
@@ -150,17 +154,12 @@
                     $_id = $_GET["id"];
                     $_id = strip_tags($_id);
                     $_id = htmlspecialchars($_id);
-
-                    $total_period = intval($_GET["p"]);
-                    $d1 = $_GET["d1"];
-                    $d2 = $_GET["d2"];
-
-                    $order_date = date("m/d/Y");
                     include '../php/dbconnect.php';
-                    $sql = "SELECT name, type, capacity, location, price_per_day, image 
-                            FROM car, car_capacity
+                    $sql = "SELECT name, type, capacity, location, image, rent_amount, order_date
+                            FROM car, car_capacity, rent_order
                             WHERE `car`.`type` = `car_capacity`.`car_type`
-                            AND `car`.`_id` = '$_id'
+                            AND `rent_order`.`order_id` = '$_id'
+                            AND `rent_order`.`status` = false
                             AND `car`.`deleted` = false 
                             AND `car`.`status` = false";
                     $res = mysqli_query($conn, $sql);
@@ -168,11 +167,10 @@
                     $car_name = $row['name'];
                     $car_type = $row['type'];
                     $car_capacity = $row['capacity'];
-                    $car_cost = $row['price_per_day'];
+                    $total_rent_amt = $row['rent_amount'];
+                    $order_date = $row['order_date'];
                     $car_location = $row['location'];
                     $car_image = $row['image'];
-
-                    $total_rent_amt = $total_period * $car_cost;
                     $user_id = $_SESSION["uid"];
             ?>
                 <div class="item  col-xs-4 col-lg-4">
@@ -191,13 +189,7 @@
                                     <p class="lead">Total: $<?php echo $total_rent_amt;?></p>
                                 </div>
                                 <div class="col-xs-12 col-md-6">
-                                    <form>
-                                        <input type="text" name="pick-up-date" value="<?php echo $d1;?>">
-                                        <input type="text" name="drop-off-date" value="<?php echo $d2;?>">
-                                        <input type="number" step="0.01" name="rent-amount" 
-                                        value="<?php echo $total_rent_amt;?>">
-                                        <input type="text" name="car-id" value="<?php echo $_id;?>">
-                                        <input type="text" name="user-id" value="<?php echo $user_id;?>">
+                                    <form method="POST" action="../php/neworder.php" enctype="multipart/formdata">
                                         <input type="submit" name="checkout" value="Checkout" class="btn btn-success">
                                     </form>
                                 </div>

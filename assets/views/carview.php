@@ -98,13 +98,17 @@
         <?php if(isset($_SESSION["username"])){ ?>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="cartview.php?id=<?php echo $car_id;?>&p=<?php echo $period;?>">
-                    My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
                     <?php 
-                        if(isset($_SESSION["booking_count"])){ 
-                            echo $_SESSION["booking_count"];
-                        }
+                        include '../php/dbconnect.php';
+                        $user_id = $_SESSION["uid"];
+                        $sql3 = "SELECT * FROM rent_order WHERE user_id= '$user_id'";
+                        $res3 = mysqli_query($conn, $sql3);
+                        $row3 = mysqli_fetch_assoc($res3);
+                        $count = mysqli_num_rows($res3); 
                     ?>
+                    <a href="cartview.php?id=<?php echo $row3['order_id'];?>">
+                    My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
+                    <?php echo $count;?>
                     </a>
                 </li>
             </ul>
@@ -261,6 +265,10 @@
                     $pick_up_date = $_POST["pick-up-date"];
                     $drop_off_date = $_POST["drop-off-date"];
 
+                    
+
+                    $user_id = $_SESSION["uid"];
+
                     $d1= new DateTime($pick_up_date);
                     $d2= new DateTime($drop_off_date);
 
@@ -313,6 +321,9 @@
                         $car_cost = $row["price_per_day"];
                         $car_location = $row["location"];
                         $car_image = $row["image"];
+
+                        $order_date = new DateTime();
+                        $order_date = $order_date->format("m/d/Y");
             ?>
 
                 <div class="item  col-xs-4 col-lg-4">
@@ -331,8 +342,15 @@
                                 </div>
                                 <div class="col-xs-12 col-md-6">
                                     <?php $_SESSION["booking_count"]=1; ?>
-                                    <a class="btn btn-success" 
-                                    href="cartview.php?id=<?php echo $car_id;?>&p=<?php echo $period;?>&d1=<?php echo $pick_up_date;?>&d2=<?php echo $drop_off_date;?>">Book Now</a>
+                                    <form method="POST" action="../php/neworder.php" enctype="multipart/formdata">
+                                        <input type="text" name="pick-up-date" value="<?php echo $pick_up_date;?>" hidden>
+                                        <input type="text" name="drop-off-date" value="<?php echo $drop_off_date;?>" hidden>
+                                        <input type="number" step="0.01" name="rent-amount" 
+                                        value="<?php echo $period*$car_cost;?>" hidden>
+                                        <input type="text" name="car-id" value="<?php echo $car_id;?>" hidden>
+                                        <input type="text" name="user-id" value="<?php echo $user_id;?>" hidden>
+                                        <input type="submit" name="book-now" value="Book Now" class="btn btn-success">
+                                    </form>
                                 </div>
                             </div>
                         </div>
