@@ -154,14 +154,13 @@
         <div id="products" class="row list-group">
             <?php
                 include '../php/dbconnect.php';
-                $sql4 = "SELECT * FROM rent_order WHERE status=true";
+                $sql4 = "SELECT * FROM rent_order WHERE status=false";
                 $res4 = mysqli_query($conn, $sql4);
                 $order_count = mysqli_num_rows($res4);
                 if($order_count == 0){
                     echo "<h4 class='text-center'>You have no items in your cart. Add new items and then check again.</h4><br>";
-                }
-            ?>
-            <?php if(isset($_GET["id"])){ 
+                }else{
+                if(isset($_GET["id"])){ 
                     $_id = $_GET["id"];
                     $_id = strip_tags($_id);
                     $_id = htmlspecialchars($_id);
@@ -209,7 +208,7 @@
                                 </div>
                                 <div class="col-xs-12 col-md-3">
                                     <form method="POST" action="../php/deleteorder.php" enctype="multipart/formdata">
-                                        <input type="submit" name="delete-order" value="Delete" class="btn btn-danger">
+                                        <input type="submit" name="delete-order-from-cart" value="Delete" class="btn btn-danger">
                                         <input type="text" name="order-id" value="<?php echo $order_id;?>" hidden>
                                         <input type="text" name="car-id" value="<?php echo $car_id;?>" hidden>
                                     </form>
@@ -218,7 +217,7 @@
                         </div>
                     </div>
                 </div>
-            <?php }} ?>
+            <?php }}} ?>
         </div>
         <!-- List of orders -->
     </div>
