@@ -31,7 +31,7 @@
 		$res2 = mysqli_query($conn, $sql2);
 		if($res1 && $res2){
 
-			header("Location: ../views/cartview.php");
+			header("Location: ../views/cartview.php?id=$user_id");
 		}else{
 			echo "error"."<br>";
 			echo mysqli_error($conn);
