@@ -140,7 +140,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="">
+                            <a href="carview.php">
                                 Car List
                             </a>
                         </li>
@@ -168,24 +168,15 @@
             </div>
             <div class="well well-sm">
                 <div class="btn-group">
-                    <form id="car-filter-form" method="POST" enctype="multipart/form-data">
-                        <label>Type</label><br>
+                    <form id="car-filter-form" method="POST" enctype="multipart/form-data" action="carview.php">
+                        <label>Cost</label>
                         <div class="radio">
-                            <label><input type="radio" name="hatchback-filter">Hatchback</label>    
+                            <label><input id="lh-filter" type="radio" name="filter" value="low-high">Low to High</label>    
                         </div>
                         <div class="radio">
-                            <label><input type="radio" name="sedan-filter">Sedan</label>    
+                            <label><input id="hl-filter" type="radio" name="filter" value="high-low">High to Low</label>    
                         </div>
-                        <div class="radio">
-                            <label><input type="radio" name="suv-filter">SUV</label>    
-                        </div>
-                        <label>Cost</label><br>
-                        <div class="radio">
-                            <label><input type="radio" name="filter-type">Low to High</label>    
-                        </div>
-                        <div class="radio">
-                            <label><input type="radio" name="filter-type">High to Low</label>    
-                        </div>
+                        <input id="apply-filter" type="submit" name="apply-filter" value="Apply" class="btn btn-primary">
                     </form>
                 </div>
             </div>
@@ -272,27 +263,30 @@
             <!-- Admin car view -->
             <!-- user car view -->
             <?php
+
                 if(isset($_POST["search"])) { 
                     $car_location = $_POST["pick-up-location"];
                     $car_location = strip_tags($car_location);
                     $car_location = htmlspecialchars($car_location);
+                    $_SESSION["car_location"] = $car_location;
 
                     $pick_up_date = $_POST["pick-up-date"];
+                    $_SESSION["pick_up_date"] = $pick_up_date;
                     $drop_off_date = $_POST["drop-off-date"];
-
+                    $_SESSION["drop_off_date"] = $drop_off_date;
                     
-
                     $user_id = $_SESSION["uid"];
 
                     $d1= new DateTime($pick_up_date);
                     $d2= new DateTime($drop_off_date);
 
                     $period = $d2->diff($d1)->days;
+                    $_SESSION["period"] = $period;
 
                     $car_type = $_POST["car-type"];
                     $car_type = strip_tags($car_type);
                     $car_type = htmlspecialchars($car_type);
-
+                    $_SESSION["car_type"] = $car_type;
 
 
                     $cars_per_page = 3;
@@ -373,7 +367,100 @@
                 </div>
             <?php } } ?>
             <!-- user car view -->
+            <!-- filtered car view -->
+            <?php
+                if(isset($_POST["apply-filter"])) { 
+                    $car_location = $_SESSION["car_location"];
+                    $pick_up_date = $_SESSION["pick_up_date"];
+                    $drop_off_date = $_SESSION["drop_off_date"];
+                    $period = $_SESSION["period"];
+                    $car_type = $_SESSION["car_type"];
 
+                    $filter = $_POST["filter"];
+                    if($filter == "low-high"){
+                        $order_by = "ASC";
+                    }else{
+                        $order_by = "DESC";
+                    }
+                    $cars_per_page = 3;
+                    if(isset($_GET['page'])){
+                        $active_page = trim($_GET['page']);
+                        $active_page = strip_tags($active_page);
+                        $active_page = htmlspecialchars($active_page);
+                        $offset = ($active_page-1)*$cars_per_page;
+                    }else{
+                        $offset = 0;
+                        $active_page = 1;
+                    }
+                    include '../php/dbconnect.php';
+                    $sql1 = "SELECT _id, name, type, location, capacity, image, price_per_day
+                            FROM car, car_capacity
+                            WHERE `car`.`type` = `car_capacity`.`car_type` 
+                            AND `car`.`deleted`=false 
+                            AND `car`.`status`=false
+                            AND `car`.`type` = '$car_type'
+                            AND `car`.`location` = '$car_location'
+                            ORDER BY price_per_day $order_by
+                            LIMIT $offset, $cars_per_page ";
+                    $res1 = mysqli_query($conn, $sql1);
+
+                    $sql2 = "SELECT count(*) 
+                             FROM car, car_capacity
+                             WHERE `car`.`type` = `car_capacity`.`car_type` 
+                             AND `car`.`deleted`=false 
+                             AND `car`.`status`=false
+                             AND `car`.`type` = '$car_type'
+                             AND `car`.`location` = '$car_location'";
+                    $res2 = mysqli_query($conn, $sql2);
+
+                    $total_rows = mysqli_num_rows($res2);
+                    $total_pages = $total_rows / $cars_per_page;
+
+                    while($row = mysqli_fetch_assoc($res1)){
+                        $car_id = $row["_id"];
+                        $car_name = $row["name"];
+                        $car_type = $row["type"];
+                        $car_capacity = $row["capacity"];
+                        $car_cost = $row["price_per_day"];
+                        $car_location = $row["location"];
+                        $car_image = $row["image"];
+
+                        $order_date = new DateTime();
+                        $order_date = $order_date->format("m/d/Y");
+            ?>
+
+                <div class="item  col-xs-4 col-lg-4">
+                    <div class="thumbnail">
+                        <img class="car-img group list-group-image" 
+                        src="../../public/images/uploads/<?php echo $car_image; ?>" 
+                        alt="<?php echo $car_name; ?>" />
+                        <div class="caption">
+                            <h4 class="group inner list-group-item-heading"><?php echo $car_name;?></h4>
+                            <p class="group inner list-group-item-text">Type: <?php echo $car_type;?></p>
+                            <p class="group inner list-group-item-text">Location: <?php echo $car_location;?></p>
+                            <p class="group inner list-group-item-text">Capacity: <?php echo $car_capacity;?></p>
+                            <div class="row">
+                                <div class="col-xs-12 col-md-6">
+                                    <p class="lead">$<?php echo $car_cost;?></p>
+                                </div>
+                                <div class="col-xs-12 col-md-6">
+                                    <?php $_SESSION["booking_count"]=1; ?>
+                                    <form method="POST" action="../php/neworder.php" enctype="multipart/formdata">
+                                        <input type="text" name="pick-up-date" value="<?php echo $pick_up_date;?>" hidden>
+                                        <input type="text" name="drop-off-date" value="<?php echo $drop_off_date;?>" hidden>
+                                        <input type="number" step="0.01" name="rent-amount" 
+                                        value="<?php echo $period*$car_cost;?>" hidden>
+                                        <input type="text" name="car-id" value="<?php echo $car_id;?>" hidden>
+                                        <input type="text" name="user-id" value="<?php echo $user_id;?>" hidden>
+                                        <input type="submit" name="book-now" value="Book Now" class="btn btn-success">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php } } ?>
+            <!-- filtered car view -->
             </div>
 
             <div class="text-center">
