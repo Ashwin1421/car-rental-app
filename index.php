@@ -118,9 +118,17 @@
         <?php if(isset($_SESSION["username"])){ ?>
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="assets/views/cartview.php">
-                    My Cart
-                    <span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
+                    <?php 
+                        include 'assets/php/dbconnect.php';
+                        $user_id = $_SESSION["uid"];
+                        $sql3 = "SELECT * FROM rent_order WHERE user_id= '$user_id'";
+                        $res3 = mysqli_query($conn, $sql3);
+                        $row3 = mysqli_fetch_assoc($res3);
+                        $count = mysqli_num_rows($res3); 
+                    ?>
+                    <a href="assets/views/cartview.php?id=<?php echo $row3['order_id'];?>">
+                    My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
+                    <?php echo $count;?>
                     </a>
                 </li>
             </ul>
