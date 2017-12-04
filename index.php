@@ -119,7 +119,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <?php 
-                        include '../php/dbconnect.php';
+                        include 'assets/php/dbconnect.php';
                         $user_id = $_SESSION["uid"];
                         $sql3 = "SELECT * FROM rent_order 
                                  WHERE user_id= '$user_id' 
