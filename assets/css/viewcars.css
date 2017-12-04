@@ -1,8 +1,7 @@
-#car-view{
+#car-view, #order-view, #user-cart-view {
 	margin: 25px;
 	padding: 25px;
 }
-
 .thumbnail
 {
     margin-bottom: 20px;
