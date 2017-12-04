@@ -16,8 +16,9 @@
 		include 'dbconnect.php';
 		$res = mysqli_query($conn, $sql);
 
-		if(!$res){
+		if(!$res || (mysqli_num_rows($res) == 0) ){
 			echo "Error";
+			header("Location: ../views/login.html");
 		}else{
 			$row = mysqli_fetch_assoc($res);
 			if($row["username"] == $username && $row["password"] == $password_hash){
@@ -27,12 +28,7 @@
 				$_SESSION["admin"] = $row["admin"];
 				$_SESSION["uid"] = $row["_id"];
 
-				if(isset($_SESSION["booking_count"])){
-					
-					header("Location: ../views/cartview.php?id=$id");
-				}else{
-					header("Location: ../../index.php");	
-				}
+				header("Location: ../../index.php");
 			}
 		}
 	}
