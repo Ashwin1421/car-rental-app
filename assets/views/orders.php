@@ -79,7 +79,7 @@
                 </li>
                 <li>
                     <?php if(isset($_SESSION["username"])){ ?>
-                        <a id="order-list" href="orders.php">My Orders
+                        <a id="order-list" href="#">My Orders
                         </a>
                     <?php }?>
                 </li>
@@ -146,45 +146,35 @@
     </nav>
 
     <!-- Page Content -->
-    <div id="user-cart-view" class="container-fluid">
+    <div id="order-view" class="container-fluid">
         <div class="well well-sm">
-            <strong>Review Order</strong>
+            <strong>My Orders</strong>
         </div>
         <!-- List of orders -->
         <div id="products" class="row list-group">
-            <?php
+            <?php 
                 include '../php/dbconnect.php';
                 $sql4 = "SELECT * FROM rent_order WHERE status=true";
                 $res4 = mysqli_query($conn, $sql4);
                 $order_count = mysqli_num_rows($res4);
                 if($order_count == 0){
-                    echo "<h4 class='text-center'>You have no items in your cart. Add new items and then check again.</h4><br>";
-                }
-            ?>
-            <?php if(isset($_GET["id"])){ 
-                    $_id = $_GET["id"];
-                    $_id = strip_tags($_id);
-                    $_id = htmlspecialchars($_id);
-                    include '../php/dbconnect.php';
-                    $sql = "SELECT _id, name, type, capacity, location, image, rent_amount, order_date, order_id
-                            FROM car, car_capacity, rent_order 
-                            WHERE `rent_order`.`user_id`= '$_id' 
-                            AND `rent_order`.`car_id` = `car`.`_id` 
-                            AND `car`.`type`=`car_capacity`.`car_type`
-                            AND `rent_order`.`status`=false";
-
-                    $res = mysqli_query($conn, $sql);
-                    $user_id = $_SESSION["uid"];
-                    while($row = mysqli_fetch_assoc($res)){
-                        $car_name = $row['name'];
-                        $car_id = $row['_id'];
-                        $car_type = $row['type'];
-                        $car_capacity = $row['capacity'];
-                        $total_rent_amt = $row['rent_amount'];
-                        $order_date = $row['order_date'];
-                        $car_location = $row['location'];
-                        $car_image = $row['image'];
-                        $order_id = $row['order_id'];
+                    echo "<h4 class='text-center'>You have no orders yet. Please check your cart for any unchecked items.</h4><br>";
+                }else{
+                    $sql5 = "SELECT _id, name, type, capacity, pickup_date, dropoff_date, location, image, order_date, rent_amount 
+                             FROM car, car_capacity, rent_order 
+                             WHERE `rent_order`.`user_id`= '$user_id' 
+                             AND `rent_order`.`car_id` = `car`.`_id` 
+                             AND `car`.`type`=`car_capacity`.`car_type` 
+                             AND `rent_order`.`status`=true";
+                    $res5 = mysqli_query($conn, $sql5);
+                    while($row5 = mysqli_fetch_assoc($res5)){
+                        $car_name = $row5['name'];
+                        $car_id = $row5['_id'];
+                        $car_image = $row5['image'];
+                        $car_type = $row5['type'];
+                        $car_location = $row5['capacity'];
+                        $order_date = $row5['order_date'];
+                        $total_rent_amt = $row5['rent_amount'];
             ?>
                 <div class="item  col-xs-4 col-lg-4">
                     <div class="thumbnail">
@@ -201,15 +191,9 @@
                                 <div class="col-xs-12 col-md-6">
                                     <p class="lead">Total: $<?php echo $total_rent_amt;?></p>
                                 </div>
-                                <div class="col-xs-12 col-md-3">
-                                    <form method="POST" action="../php/checkout.php" enctype="multipart/formdata">
-                                        <input type="submit" name="checkout" value="Checkout" class="btn btn-success">
-                                        <input type="text" name="order-id" value="<?php echo $order_id;?>" hidden>
-                                    </form>
-                                </div>
-                                <div class="col-xs-12 col-md-3">
+                                <div class="col-xs-12 col-md-6">
                                     <form method="POST" action="../php/deleteorder.php" enctype="multipart/formdata">
-                                        <input type="submit" name="delete-order" value="Delete" class="btn btn-danger">
+                                        <input type="submit" name="delete-order" value="Cancel Order" class="btn btn-danger">
                                         <input type="text" name="order-id" value="<?php echo $order_id;?>" hidden>
                                         <input type="text" name="car-id" value="<?php echo $car_id;?>" hidden>
                                     </form>
@@ -218,7 +202,7 @@
                         </div>
                     </div>
                 </div>
-            <?php }} ?>
+            <?php }}?>
         </div>
         <!-- List of orders -->
     </div>
