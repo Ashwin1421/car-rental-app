@@ -78,18 +78,31 @@
                     <?php }?>
                 </li>
                 <li>
-                    <?php if(isset($_SESSION["username"])){ ?>
-                        <a id="order-list" href="orders.php">My Orders
+                    <?php 
+                        if(isset($_SESSION["username"])){ 
+                            $user_id = $_SESSION['uid'];
+                            include '../php/dbconnect.php';
+                            $sql = "SELECT * 
+                                    FROM rent_order 
+                                    WHERE status=true 
+                                    AND user_id='$user_id'";
+                            $res = mysqli_query($conn, $sql);
+                            $order_count = mysqli_num_rows($res);
+                    ?>
+                        
+                        <a id="order-list" href="orders.php">
+                        My Orders&nbsp;<?php if($order_count>0){ echo "<span class='badge badge-dark'>".$order_count."</span>";}?>
                         </a>
                     <?php }?>
                 </li>
+                <?php if(isset($_SESSION["username"])){ ?>
+                <li class="divider"></li>
                 <li>
-                    <?php if(isset($_SESSION["username"])){ ?>
-                        <a id="log-out" href="../php/logout.php">Logout
-                        <span class="glyphicon glyphicon-log-out"></span>
-                        </a>
-                    <?php }?>
+                    <a id="log-out" href="../php/logout.php">Logout
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    </a>
                 </li>
+                <?php }?>
             </ul>
             </li>
         </ul>
@@ -109,7 +122,7 @@
                     ?>
                     <a href="cartview.php?id=<?php echo $user_id;?>">
                     My Cart&nbsp;<span class="glyphicon glyphicon glyphicon-shopping-cart"></span>
-                    <?php echo $count;?>
+                    <?php if($count>0){ echo $count;}?>
                     </a>
                 </li>
             </ul>
