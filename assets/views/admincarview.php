@@ -33,7 +33,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="index.php" class="navbar-brand">EZRide</a>
+        <a href="../../index.php" class="navbar-brand">EZRide</a>
     </div>
     <!-- Collection of nav links, forms, and other content for toggling -->
     <div id="navbarCollapse" class="collapse navbar-collapse">
@@ -72,14 +72,14 @@
             <ul id="btn-list" class="dropdown-menu">
                 <li>
                     <?php if(!isset($_SESSION["username"])){ ?>
-                        <a id="sign-up" href="assets/views/register.html">
+                        <a id="sign-up" href="register.html">
                         Sign-Up
                         </a>
                     <?php }?>
                 </li>
                 <li>
                     <?php if(!isset($_SESSION["username"])){ ?>
-                        <a id="log-in" href="assets/views/login.html">
+                        <a id="log-in" href="login.html">
                         Login
                         <span class="glyphicon glyphicon-log-in"></span>
                         </a>
