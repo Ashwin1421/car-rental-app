@@ -63,15 +63,18 @@
                 </a>
             </li>
         </ul>
-        <form class="navbar-form navbar-left">
+        <?php if(isset($_SESSION["admin"])){ if($_SESSION["admin"] == 1){ ?>
+        <form method="POST" class="navbar-form navbar-left" action="assets/views/admincarview.php">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" name="car-name" class="form-control" placeholder="Search">
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                    <button type="submit" name="car-search" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
                 </span>
             </div>
         </form>
-
+        <?php } }?>
         <ul class="nav navbar-nav navbar-right">
             <li>
             <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -136,7 +139,8 @@
                         $user_id = $_SESSION["uid"];
                         $sql3 = "SELECT * FROM rent_order 
                                  WHERE user_id= '$user_id' 
-                                 AND status=false";
+                                 AND status=false
+                                 AND car_deleted=false";
                         $res3 = mysqli_query($conn, $sql3);
                         $row3 = mysqli_fetch_assoc($res3);
                         $count = mysqli_num_rows($res3); 
@@ -160,7 +164,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="assets/views/carview.php">
+                            <a href="assets/views/admincarview.php">
                                 Car List
                             </a>
                         </li>
@@ -181,7 +185,7 @@
 
     <!-- Page Content -->
     <div class="container">
-        <form id="car-rental-form" class="form-inline" method="POST" action="assets/views/carview.php" enctype="multipart/form-data">
+        <form id="car-rental-form" class="form-inline" method="POST" action="assets/views/usercarview.php" enctype="multipart/form-data">
             <h3>Rent a car</h3>
             <hr noshade>
             <div class="form-group">
@@ -204,7 +208,12 @@
             <div class="form-group">
                 <?php if(isset($_SESSION["username"])){ ?>
                 <input id="car-search" type="submit" name="search" value="Search" class="btn btn-success">
-                <?php }else{?>
+                <?php 
+                        unset($_SESSION["search"]);
+                        unset($_SESSION["filter"]);
+                    }
+                    else{
+                ?>
                 <a id="car-search" href="assets/views/login.html" class="btn btn-success">Search</a>
                 <?php }?>
                 <input id="reset" type="reset" name="reset" value="Reset" class="btn btn-danger">
@@ -212,56 +221,60 @@
         </form>
     </div>
 
-
-
-
-
-
 </div>
     <footer id="myFooter">
         <div class="container">
             <div class="row">
-                <div class="col-sm-3 myCols">
+                <div class="col-sm-4 myCols">
                     <h5>Get started</h5>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Sign up</a></li>
-                        <li><a href="#">Downloads</a></li>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="assets/views/register.html">Sign up</a></li>
+                        <li><a href="assets/views/login.html">Login</a></li>
                     </ul>
                 </div>
-                <div class="col-sm-3 myCols">
+                <div class="col-sm-4 myCols">
+                    <h5>Contact Us</h5>
+                    <ul>
+                        <li>
+                            <a href="mailto: avj160330@utdallas.edu">
+                            <i class="fa fa-envelope"></i> 
+                            Ashwin Joshi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto: yas160130@utdallas.edu">
+                            <i class="fa fa-envelope"></i> 
+                            Yash Sanzgiri
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 myCols">
                     <h5>About us</h5>
                     <ul>
-                        <li><a href="#">Company Information</a></li>
-                        <li><a href="#">Contact us</a></li>
-                        <li><a href="#">Reviews</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-3 myCols">
-                    <h5>Support</h5>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Help desk</a></li>
-                        <li><a href="#">Forums</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-3 myCols">
-                    <h5>Legal</h5>
-                    <ul>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Terms of Use</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li>
+                            <a href="https://github.com/Ashwin1421">
+                            <i class="fa fa-github"></i> 
+                            Ashwin Joshi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/yashsanzgiri">
+                            <i class="fa fa-github"></i> 
+                            Yash Sanzgiri
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="social-networks">
-            <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-            <a href="#" class="facebook"><i class="fa fa-facebook-official"></i></a>
-            <a href="#" class="google"><i class="fa fa-google-plus"></i></a>
-        </div>
         <div class="footer-copyright">
-            <p>© 2016 Copyright Text </p>
+            <p>
+            Developed by, 
+            <a href="https://github.com/Ashwin1421">Ashwin J.</a>&nbsp;&amp;
+            <a href="https://github.com/yashsanzgiri">Yash S.</a>
+            </p>
         </div>
     </footer>
 </body>
