@@ -121,7 +121,7 @@
 				echo "Error in query2";
 			}
 			if($res1 && $res2){
-				header('Location: ../views/carview.php');
+				header('Location: ../views/admincarview.php');
 			}
 		}
 
