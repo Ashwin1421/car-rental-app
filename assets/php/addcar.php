@@ -12,6 +12,10 @@
 		$cartype = strip_tags($cartype);
 		$cartype = htmlspecialchars($cartype);
 
+		$carlocation = $_POST["car-location"];
+		$carlocation = strip_tags($carlocation);
+		$carlocation = htmlspecialchars($carlocation);
+
 		$carcost = floatval($_POST["car-cost"]);
 		$carcost = strip_tags($carcost);
 		$carcost = htmlspecialchars($carcost);
@@ -58,8 +62,8 @@
 		} else {
 		    if (move_uploaded_file($_FILES["car-image"]["tmp_name"], $target_image_file)) {
 		    	include 'dbconnect.php';
-				$sql1 = "INSERT INTO car(_id, name, type, price_per_day, image) 
-						 VALUES ('$car_id','$carname','$cartype', $carcost, '$image_file_name')";
+				$sql1 = "INSERT INTO car(_id, name, type, location, price_per_day, image) 
+						 VALUES ('$car_id','$carname','$cartype', '$carlocation',$carcost, '$image_file_name')";
 
 				$res1 = mysqli_query($conn, $sql1);
 				if(!$res1){
@@ -67,7 +71,7 @@
 				}
 
 				if($res1){
-					header('Location: ../views/addcarform.php');
+					header('Location: ../views/admincarview.php');
 				}
 		    } else {
 		        echo "Sorry, there was an error uploading your file.";
