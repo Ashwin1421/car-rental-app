@@ -5,13 +5,12 @@
     <title>EZRide</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
     <link rel="shortcut icon" href="../../public/images/shortcut_icon.png">
     <link rel="stylesheet" href="../css/Footer-with-social-icons.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/viewcars.css">
 </head>
 
@@ -42,11 +41,13 @@
                 </a>
             </li>
         </ul>
-        <form class="navbar-form navbar-left">
+        <form method="POST" class="navbar-form navbar-left" action="usercarview.php">
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" name="car-name" class="form-control" placeholder="Search">
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                    <button type="submit" name="car-search" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
                 </span>
             </div>
         </form>
@@ -115,7 +116,8 @@
                         $user_id = $_SESSION["uid"];
                         $sql3 = "SELECT * FROM rent_order 
                                  WHERE user_id= '$user_id' 
-                                 AND status=false";
+                                 AND status=false 
+                                 AND car_deleted=false";
                         $res3 = mysqli_query($conn, $sql3);
                         $row3 = mysqli_fetch_assoc($res3);
                         $count = mysqli_num_rows($res3); 
@@ -167,7 +169,10 @@
         <div id="products" class="row list-group">
             <?php 
                 include '../php/dbconnect.php';
-                $sql4 = "SELECT * FROM rent_order WHERE status=true";
+                $sql4 = "SELECT * 
+                         FROM rent_order 
+                         WHERE status=true 
+                         AND user_id = '$user_id'";
                 $res4 = mysqli_query($conn, $sql4);
                 $order_count = mysqli_num_rows($res4);
                 if($order_count == 0){
@@ -233,49 +238,59 @@
 
 
 </div>
-    <footer id="myFooter">
+<footer id="myFooter">
         <div class="container">
             <div class="row">
-                <div class="col-sm-3 myCols">
+                <div class="col-sm-4 myCols">
                     <h5>Get started</h5>
                     <ul>
                         <li><a href="../../index.php">Home</a></li>
                         <li><a href="register.html">Sign up</a></li>
+                        <li><a href="login.html">Login</a></li>
                     </ul>
                 </div>
-                <div class="col-sm-3 myCols">
+                <div class="col-sm-4 myCols">
+                    <h5>Contact Us</h5>
+                    <ul>
+                        <li>
+                            <a href="mailto: avj160330@utdallas.edu">
+                            <i class="fa fa-envelope"></i> 
+                            Ashwin Joshi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto: yas160130@utdallas.edu">
+                            <i class="fa fa-envelope"></i> 
+                            Yash Sanzgiri
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 myCols">
                     <h5>About us</h5>
                     <ul>
-                        <li><a href="#">Company Information</a></li>
-                        <li><a href="#">Contact us</a></li>
-                        <li><a href="#">Reviews</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-3 myCols">
-                    <h5>Support</h5>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Help desk</a></li>
-                        <li><a href="#">Forums</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-3 myCols">
-                    <h5>Legal</h5>
-                    <ul>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Terms of Use</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li>
+                            <a href="https://github.com/Ashwin1421">
+                            <i class="fa fa-github"></i> 
+                            Ashwin Joshi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/yashsanzgiri">
+                            <i class="fa fa-github"></i> 
+                            Yash Sanzgiri
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="social-networks">
-            <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-            <a href="#" class="facebook"><i class="fa fa-facebook-official"></i></a>
-            <a href="#" class="google"><i class="fa fa-google-plus"></i></a>
-        </div>
         <div class="footer-copyright">
-            <p>© 2016 Copyright Text </p>
+            <p>
+            Developed by, 
+            <a href="https://github.com/Ashwin1421">Ashwin J.</a>&nbsp;&amp;
+            <a href="https://github.com/yashsanzgiri">Yash S.</a>
+            </p>
         </div>
     </footer>
 </body>
