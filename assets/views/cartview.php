@@ -44,7 +44,7 @@
         <?php if(isset($_SESSION["admin"])){ if($_SESSION["admin"] == 1){ ?>
         <form method="POST" class="navbar-form navbar-left" action="admincarview.php">
         <?php }}?>
-        <?php if(isset($_SESSION["uid"]) && ($_SESSION['admin'] == 0) ){ ?>
+        <?php if(isset($_SESSION["username"]) && ($_SESSION['admin'] == 0) ){ ?>
         <form method="POST" class="navbar-form navbar-left" action="usercarview.php">
         <?php } ?>
             <div class="input-group">
@@ -147,7 +147,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="carview.php">
+                            <a href="admincarview.php">
                                 Car List
                             </a>
                         </li>
