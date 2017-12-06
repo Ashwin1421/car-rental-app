@@ -5,13 +5,12 @@
     <title>EZRide</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
     <link rel="shortcut icon" href="../../public/images/shortcut_icon.png">
     <link rel="stylesheet" href="../css/Footer-with-social-icons.css">
-    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/form.css">
 </head>
 
@@ -42,11 +41,17 @@
                 </a>
             </li>
         </ul>
-        <form class="navbar-form navbar-left">
+        <?php if(isset($_SESSION["admin"])){ if($_SESSION["admin"] == 1){ ?>
+        <form method="POST" class="navbar-form navbar-left" action="admincarview.php">
+        <?php }}else{ ?>
+        <form method="POST" class="navbar-form navbar-left" action="usercarview.php">
+        <?php } ?>
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Search">
+                <input type="text" name="car-name" class="form-control" placeholder="Search">
                 <span class="input-group-btn">
-                    <button type="button" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                    <button type="submit" name="car-search" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
                 </span>
             </div>
         </form>
@@ -116,7 +121,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="carview.php">
+                            <a href="admincarview.php">
                                 Car List
                             </a>
                         </li>
@@ -159,9 +164,21 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="car-location" class="control-label col-sm-2">Car Location:</label>
+                <div class="col-sm-4">
+                <select name="car-location" id="car-location" class="form-control">
+                    <option selected="selected" disabled="disabled" style="display:none;">Select Car Location</option>
+                    <option value="Dallas">Dallas</option>
+                    <option value="Irving">Irving</option>
+                    <option value="Austin">Austin</option>
+                    <option value="Houston">Houston</option>
+                </select>
+                </div>
+            </div>
+            <div class="form-group">
                 <label for="car-cost" class="control-label col-sm-2">Cost:</label>
                 <div class="col-sm-2">
-                    <input type="number" step="0.01" name="car-cost" id="car-cost" class="form-control" min="4.99" max="99.99" placeholder="&dollar; / hour">
+                    <input type="number" step="0.01" name="car-cost" id="car-cost" class="form-control" min="4.99" max="99.99" placeholder="&dollar; / day">
                 </div>
             </div>
             <div class="form-group">
@@ -185,50 +202,59 @@
 
 
 </div>
-    <footer id="myFooter">
+<footer id="myFooter">
         <div class="container">
             <div class="row">
-                <div class="col-sm-3 myCols">
+                <div class="col-sm-4 myCols">
                     <h5>Get started</h5>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Sign up</a></li>
-                        <li><a href="#">Downloads</a></li>
+                        <li><a href="../../index.php">Home</a></li>
+                        <li><a href="register.html">Sign up</a></li>
+                        <li><a href="login.html">Login</a></li>
                     </ul>
                 </div>
-                <div class="col-sm-3 myCols">
+                <div class="col-sm-4 myCols">
+                    <h5>Contact Us</h5>
+                    <ul>
+                        <li>
+                            <a href="mailto: avj160330@utdallas.edu">
+                            <i class="fa fa-envelope"></i> 
+                            Ashwin Joshi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="mailto: yas160130@utdallas.edu">
+                            <i class="fa fa-envelope"></i> 
+                            Yash Sanzgiri
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-4 myCols">
                     <h5>About us</h5>
                     <ul>
-                        <li><a href="#">Company Information</a></li>
-                        <li><a href="#">Contact us</a></li>
-                        <li><a href="#">Reviews</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-3 myCols">
-                    <h5>Support</h5>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Help desk</a></li>
-                        <li><a href="#">Forums</a></li>
-                    </ul>
-                </div>
-                <div class="col-sm-3 myCols">
-                    <h5>Legal</h5>
-                    <ul>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Terms of Use</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
+                        <li>
+                            <a href="https://github.com/Ashwin1421">
+                            <i class="fa fa-github"></i> 
+                            Ashwin Joshi
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://github.com/yashsanzgiri">
+                            <i class="fa fa-github"></i> 
+                            Yash Sanzgiri
+                            </a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="social-networks">
-            <a href="#" class="twitter"><i class="fa fa-twitter"></i></a>
-            <a href="#" class="facebook"><i class="fa fa-facebook-official"></i></a>
-            <a href="#" class="google"><i class="fa fa-google-plus"></i></a>
-        </div>
         <div class="footer-copyright">
-            <p>© 2016 Copyright Text </p>
+            <p>
+            Developed by, 
+            <a href="https://github.com/Ashwin1421">Ashwin J.</a>&nbsp;&amp;
+            <a href="https://github.com/yashsanzgiri">Yash S.</a>
+            </p>
         </div>
     </footer>
 </body>
