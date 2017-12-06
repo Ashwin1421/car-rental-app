@@ -39,6 +39,7 @@
 			
 			$_SESSION["username"] =$username;
 			$_SESSION["fname"] = $fname;
+			$_SESSION["uid"] = $_id;
 
 			header("Location: ../../index.php");
 		}
